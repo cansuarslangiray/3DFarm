@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 33000012411497276}
   - component: {fileID: 23000011228277260}
   - component: {fileID: 64000014021002932}
-  - component: {fileID: -7679563632195403249}
   m_Layer: 0
   m_Name: Eggplant_Fruit
   m_TagString: Untagged
@@ -107,16 +106,3 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300004, guid: b69b26c8b73b8bd49bf243bbe541a2e0, type: 3}
---- !u!114 &-7679563632195403249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000011817031034}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c260bc8e989f75d43a033d861ce983ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  growthTime: 0
