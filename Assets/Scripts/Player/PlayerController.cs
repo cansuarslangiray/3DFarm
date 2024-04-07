@@ -4,43 +4,63 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float rotationSpeed = 360f; 
-    private Rigidbody rb;
+     private Animator animator;
 
-    void Start()
+  public float walkSpeed = 2.0f;
+  public float turnSpeed = 1.5f;
+  [SerializeField] private float runSpeed = 5f;
+  private float horizontalInput;
+  private CharacterController _controller;
+
+  void Start()
+  {
+    
+    _controller = transform.GetComponent<CharacterController>();
+
+  }
+
+  void Update()
+  {
+    Walk();
+    Turn();
+  }
+
+
+
+  private void Walk()
+  {
+    
+
+    if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
     {
-        rb = GetComponent<Rigidbody>();
+    
+      Turn();
+      _controller.Move(-transform.forward * walkSpeed * Time.deltaTime);
+
+    }
+    else if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+    {
+      Turn();
+      _controller.Move(transform.forward * walkSpeed * Time.deltaTime);
     }
 
-    void Update()
+  
+  }
+  
+  private void Turn()
+  {
+    if (Input.GetKey(KeyCode.A))
     {
-        Movement();
+      // turn left
+      transform.Rotate(0, -90 * Time.deltaTime, 0);
+
+    }
+    else if (Input.GetKey(KeyCode.D))
+    {
+      // turn right
+      transform.Rotate(0, 90 * Time.deltaTime, 0);
     }
 
-    void Movement()
-    {
-        float moveHorizontal = Input.GetAxis("Horizontal") * -1;
-        float moveVertical = Input.GetAxis("Vertical") * -1;
-        float jump;
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            jump = 1;
-        }
-        else
-        {
-            jump = 0;
-        }
+  }
 
-
-        Vector3 movement = new Vector3(moveHorizontal, jump, moveVertical);
-
-
-        transform.Translate(movement * moveSpeed * Time.deltaTime);
-        if (moveHorizontal != 0)
-        {
-            float rotationAmount = moveHorizontal * rotationSpeed * Time.deltaTime;
-            transform.Rotate(0, rotationAmount, 0);
-        }
-    }
 }
