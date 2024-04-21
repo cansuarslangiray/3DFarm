@@ -462,7 +462,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.279
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -492,8 +492,8 @@ RectTransform:
   m_GameObject: {fileID: 5668244007344711130}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.015, y: 0.015, z: 0.015}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1748393282273652954}
   - {fileID: 3681995745607017860}
@@ -516,6 +516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ffb773210b7dd442a8bb0be6c7b8a73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  planet: {fileID: 0}
   timeText: {fileID: 2723734761563217238}
   passedTime: 0
 --- !u!1 &8477848266067502833
@@ -530,6 +531,7 @@ GameObject:
   - component: {fileID: 5630330890429512134}
   - component: {fileID: 2969094718936566593}
   - component: {fileID: 2551388242625555508}
+  - component: {fileID: 1345649007001086706}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -546,7 +548,7 @@ RectTransform:
   m_GameObject: {fileID: 8477848266067502833}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4971381179775076118}
@@ -566,7 +568,7 @@ Canvas:
   m_GameObject: {fileID: 8477848266067502833}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 2
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -620,3 +622,15 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1345649007001086706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8477848266067502833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57adfbe33f1c7d34abb3aebf66f50437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
