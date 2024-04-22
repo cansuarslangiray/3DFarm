@@ -1,116 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    public int sizeVegetable = 1;
+    private enum VegetableType { Carrot, Corn, Eggplant, Pumpkin, Tomato, Turnip }
+    private Dictionary<VegetableType, List<GameObject>> vegetableInventory = new Dictionary<VegetableType, List<GameObject>>();
 
-    public List<GameObject> carrots = new List<GameObject>();
-    public List<GameObject> corns = new List<GameObject>();
-    public List<GameObject> eggplants = new List<GameObject>();
-    public List<GameObject> pumpkins = new List<GameObject>();
-    public List<GameObject> tomatoes = new List<GameObject>();
-    public List<GameObject> turnips = new List<GameObject>();
-
-    public void AddVegetable(GameObject gameObject)
+    private void Awake()
     {
-        Debug.Log(gameObject.gameObject.tag);
-        gameObject.GetComponent<VegetableController>().isRipe = false;
-        switch (gameObject.gameObject.tag)
+        foreach (VegetableType type in Enum.GetValues(typeof(VegetableType)))
         {
-            case "Carrot":
-                carrots.Add(Instantiate(gameObject));
-                carrots.Add(Instantiate(gameObject));
-                Destroy(gameObject);
-                break;
-            case "Corn":
-                corns.Add(Instantiate(gameObject));
-                corns.Add(Instantiate(gameObject));
-                Destroy(gameObject);
-
-                break;
-            case "Eggplant":
-                eggplants.Add(Instantiate(gameObject));
-                eggplants.Add(Instantiate(gameObject));
-
-                Destroy(gameObject);
-
-                break;
-            case "Pumpkin":
-                pumpkins.Add(Instantiate(gameObject));
-                pumpkins.Add(Instantiate(gameObject));
-                Destroy(gameObject);
-
-                break;
-            case "Tamato":
-                tomatoes.Add(Instantiate(gameObject));
-                tomatoes.Add(Instantiate(gameObject));
-                Destroy(gameObject);
-
-                break;
-            case "Turnip":
-                turnips.Add(Instantiate(gameObject));
-                turnips.Add(Instantiate(gameObject));
-                Destroy(gameObject);
-                break;
+            vegetableInventory.Add(type, new List<GameObject>());
         }
     }
 
-    public bool UseVegetable(string type)
+    public void AddVegetable(GameObject gameObject)
     {
-        switch (type)
+        VegetableType type;
+        if (Enum.TryParse(gameObject.tag, out type) && vegetableInventory.ContainsKey(type))
         {
-            case "Carrot":
-                if (carrots.Count > 0)
-                {
-                    carrots.RemoveAt(0);
-                    return true;
-                }
-
-                break;
-            case "Corn":
-                if (corns.Count > 0)
-                {
-                    corns.RemoveAt(0);
-                    return true;
-                }
-
-                break;
-            case "Eggplant":
-                if (eggplants.Count > 0)
-                {
-                    eggplants.RemoveAt(0);
-                    return true;
-                }
-
-                break;
-            case "Pumpkin":
-                if (pumpkins.Count > 0)
-                {
-                    pumpkins.RemoveAt(0);
-                    return true;
-                }
-
-                break;
-            case "Tamato":
-                if (tomatoes.Count > 0)
-                {
-                    tomatoes.RemoveAt(0);
-                    return true;
-                }
-
-                break;
-            case "Turnip":
-                if (turnips.Count > 0)
-                {
-                    turnips.RemoveAt(0);
-                    return true;
-                }
-
-                break;
+            vegetableInventory[type].Add(gameObject);
+            Debug.Log($"Added {gameObject.tag}");
         }
+        else
+        {
+            Debug.LogError($"Invalid vegetable type: {gameObject.tag}");
+        }
+    }
 
+    public bool UseVegetable(string typeString)
+    {
+        VegetableType type;
+        if (Enum.TryParse(typeString, true, out type) && vegetableInventory[type].Count > 0)
+        {
+            vegetableInventory[type].RemoveAt(0);
+            return true;
+        }
         return false;
     }
 }
