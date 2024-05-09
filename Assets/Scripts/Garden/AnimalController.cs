@@ -78,6 +78,7 @@ public class AnimalController : MonoBehaviour
         Vector3 randomDestination = RandomPosition(transform.position, strollDist);
 
         navMeshAgent.SetDestination(randomDestination);
+        Debug.Log("corrrect?" + randomDestination);
         SetState(AnimalState.Strolling);
     }
     
