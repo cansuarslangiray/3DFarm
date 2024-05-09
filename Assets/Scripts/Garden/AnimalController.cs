@@ -35,6 +35,11 @@ public class AnimalController : MonoBehaviour
         ChangeState();
     }
 
+    private void Update()
+    {
+        float speed = currState == AnimalState.Idle ? idleSpeed : strollSpeed;
+        navMeshAgent.speed = speed;
+    }
     public void ChangeState()
     {
         switch (currState)
@@ -78,7 +83,7 @@ public class AnimalController : MonoBehaviour
         Vector3 randomDestination = RandomPosition(transform.position, strollDist);
 
         navMeshAgent.SetDestination(randomDestination);
-        Debug.Log("corrrect?" + randomDestination);
+        //Debug.Log("corrrect?" + randomDestination);
         SetState(AnimalState.Strolling);
     }
     
