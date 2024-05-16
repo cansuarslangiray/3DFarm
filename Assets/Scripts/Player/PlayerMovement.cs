@@ -42,47 +42,44 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        
         Move();
     }
 
     public void Move()
-    { 
-        ApplyGravity();
-        _animator.SetBool("IsWalking",true);
+    {
+      //  ApplyGravity();
+        _animator.SetBool("IsWalking", true);
         transform.Rotate(0, _moveInput.x * 30 * Time.deltaTime, 0);
 
         if (_moveInput.y != 0)
         {
             _characterController.SimpleMove(transform.forward * movementSpeed);
         }
-        else
+        else 
         {
-            _animator.SetBool("IsWalking",false);
-
+            _animator.SetBool("IsWalking", false);
         }
     }
-    
+
     private void ApplyGravity()
     {
         if (!_characterController.isGrounded)
         {
             _velocity += _gravity * gravityMultiplier * Time.deltaTime;
+            _characterController.SimpleMove(Vector3.up * _velocity);
         }
-       
     }
 
 
     public void Harvest()
     {
-       
-    ;
+        Debug.Log("heyyy");
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
         foreach (var hitCollider in hitColliders)
         {
             if (hitCollider.gameObject.CompareTag("Vegetable"))
             {
-              _animator.SetTrigger("pickingUp");
+                _animator.SetBool("isPicked",true);
             }
         }
     }
@@ -103,7 +100,10 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+        _animator.SetBool("isPicked",false);
+
     }
+
     private void Plant()
     {
         if (_inventory.count > 0)
@@ -128,7 +128,8 @@ public class PlayerMovement : MonoBehaviour
                         {
                             Debug.Log("5");
 
-                            GameObject plant = Instantiate(plantPrefab, hitCollider.transform.position, Quaternion.identity);
+                            GameObject plant = Instantiate(plantPrefab, hitCollider.transform.position,
+                                Quaternion.identity);
                             plant.SetActive(true);
                             soilManager.isPlanted = true;
                             _inventory.UseVegetable("Tomato");
