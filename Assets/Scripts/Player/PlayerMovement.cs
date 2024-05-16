@@ -10,21 +10,21 @@ public class PlayerMovement : MonoBehaviour
 {
     public float movementSpeed = 5f;
     public float rotationSpeed = 10f;
-
+    private Animator _animator;
     private CharacterController _characterController;
     private PlayerControls _controls;
     private Vector2 _moveInput;
-    private Transform _cameraTransform;
     private float _gravity = -9.81f;
     [SerializeField] private float gravityMultiplier = 3.0f;
     private float _velocity;
+    private Inventory _inventory;
 
     private void Awake()
     {
+        _animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
         _controls = new PlayerControls();
-        _cameraTransform = Camera.main.transform;
-
+        _inventory = GetComponent<Inventory>();
         _controls.Player.Move.performed += ctx => _moveInput = ctx.ReadValue<Vector2>();
         _controls.Player.Move.canceled += ctx => _moveInput = Vector2.zero;
         _controls.Player.Havrst.performed += ctx => Harvest();
@@ -46,35 +46,49 @@ public class PlayerMovement : MonoBehaviour
         Move();
     }
 
+    public void Move()
+    { 
+        ApplyGravity();
+        _animator.SetBool("IsWalking",true);
+        transform.Rotate(0, _moveInput.x * 30 * Time.deltaTime, 0);
 
-    private void Move()
-    {
-        if (_characterController.isGrounded)
+        if (_moveInput.y != 0)
         {
-            Vector3 moveDirection = new Vector3(_moveInput.x, 0, _moveInput.y).normalized;
-
-            if (moveDirection.magnitude >= 0.1f)
-            {
-                float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg +
-                                    _cameraTransform.eulerAngles.y;
-                Quaternion rotation = Quaternion.Euler(0f, targetAngle, 0f);
-                transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
-
-                Vector3 forward = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-                _characterController.Move(forward.normalized * movementSpeed * Time.deltaTime);
-            }
+            _characterController.SimpleMove(transform.forward * movementSpeed);
         }
-        else if (!_characterController.isGrounded)
+        else
+        {
+            _animator.SetBool("IsWalking",false);
+
+        }
+    }
+    
+    private void ApplyGravity()
+    {
+        if (!_characterController.isGrounded)
         {
             _velocity += _gravity * gravityMultiplier * Time.deltaTime;
-            _characterController.Move(new Vector3(0, _velocity * Time.deltaTime, 0));
         }
+       
     }
 
 
-    private void Harvest()
+    public void Harvest()
     {
-        var inventory = gameObject.GetComponent<Inventory>();
+       
+    ;
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.gameObject.CompareTag("Vegetable"))
+            {
+              _animator.SetTrigger("pickingUp");
+            }
+        }
+    }
+
+    public void HarvestFinished()
+    {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
         foreach (var hitCollider in hitColliders)
         {
@@ -84,8 +98,43 @@ public class PlayerMovement : MonoBehaviour
                 if (vegetable != null && vegetable.isRipe)
                 {
                     vegetable.isSeeded = false;
-                    inventory.AddVegetable(vegetable.gameObject);
+                    _inventory.AddVegetable(vegetable.gameObject);
                     Destroy(vegetable.gameObject);
+                }
+            }
+        }
+    }
+    private void Plant()
+    {
+        if (_inventory.count > 0)
+        {
+            Debug.Log("1");
+            GameObject plantPrefab = _inventory.GetPlantPrefab(Inventory.VegetableType.Tomato);
+            if (plantPrefab != null)
+            {
+                Debug.Log("2");
+
+                Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
+                foreach (var hitCollider in hitColliders)
+                {
+                    Debug.Log("3");
+
+                    if (hitCollider.gameObject.CompareTag("Soil"))
+                    {
+                        Debug.Log("4");
+
+                        SoildManager soilManager = hitCollider.gameObject.GetComponent<SoildManager>();
+                        if (!soilManager.isPlanted)
+                        {
+                            Debug.Log("5");
+
+                            GameObject plant = Instantiate(plantPrefab, hitCollider.transform.position, Quaternion.identity);
+                            plant.SetActive(true);
+                            soilManager.isPlanted = true;
+                            _inventory.UseVegetable("Tomato");
+                            break;
+                        }
+                    }
                 }
             }
         }

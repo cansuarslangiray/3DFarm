@@ -5,8 +5,22 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    private enum VegetableType { Carrot, Corn, Eggplant, Pumpkin, Tomato, Turnip }
-    private Dictionary<VegetableType, List<GameObject>> vegetableInventory = new Dictionary<VegetableType, List<GameObject>>();
+    public enum VegetableType
+    {
+        Carrot,
+        Corn,
+        Eggplant,
+        Pumpkin,
+        Tomato,
+        Turnip
+    }
+
+    public GameObject[] prefabs;
+    private GameObject _container;
+    public int count = 0;
+
+    public Dictionary<VegetableType, List<GameObject>> vegetableInventory =
+        new Dictionary<VegetableType, List<GameObject>>();
 
     private void Awake()
     {
@@ -14,21 +28,48 @@ public class Inventory : MonoBehaviour
         {
             vegetableInventory.Add(type, new List<GameObject>());
         }
-    }
 
-    public void AddVegetable(GameObject gameObject)
+        _container = GameObject.Find("PlantContainer");
+    }
+    public void AddVegetable(GameObject plant)
     {
-        VegetableType type;
-        if (Enum.TryParse(gameObject.tag, out type) && vegetableInventory.ContainsKey(type))
+        if (plant == null)
         {
-            vegetableInventory[type].Add(gameObject);
-            Debug.Log($"Added {gameObject.tag}");
+            Debug.LogError("Invalid plant object.");
+            return;
+        }
+
+        VegetableType type;
+        if (Enum.TryParse(plant.GetComponent<VegetableController>().type, out type) &&
+            vegetableInventory.ContainsKey(type))
+        {
+            for (int i = 0; i < prefabs.Length; i++)
+            {
+                if (prefabs[i].GetComponent<VegetableController>().type == plant.GetComponent<VegetableController>().type)
+                {
+                    GameObject tomato = Instantiate(prefabs[i]);
+                    GameObject tomato1 = Instantiate(prefabs[i]);
+                    tomato.transform.SetParent(_container.transform);
+                    tomato1.transform.SetParent(_container.transform);
+                    tomato1.SetActive(false);
+                    tomato.SetActive(false);
+                    vegetableInventory[type].Add(tomato);
+                    vegetableInventory[type].Add(tomato1); 
+                    break;
+                }
+            }
+
+            count += 2; 
+            Debug.Log($"Added {plant.GetComponent<VegetableController>().type} (2x)");
         }
         else
         {
-            Debug.LogError($"Invalid vegetable type: {gameObject.tag}");
+            Debug.LogError($"Invalid vegetable type: {plant.tag}");
         }
     }
+
+
+
 
     public bool UseVegetable(string typeString)
     {
@@ -38,6 +79,17 @@ public class Inventory : MonoBehaviour
             vegetableInventory[type].RemoveAt(0);
             return true;
         }
+
         return false;
+    }
+
+    public GameObject GetPlantPrefab(VegetableType type)
+    {
+        if (vegetableInventory.ContainsKey(type) && vegetableInventory[type].Count > 0)
+        {
+            Debug.Log("HALOOO");
+            return vegetableInventory[type][0]; 
+        }
+        return null;
     }
 }

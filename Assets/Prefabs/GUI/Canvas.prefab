@@ -516,8 +516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ffb773210b7dd442a8bb0be6c7b8a73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planet: {fileID: 0}
-  timeText: {fileID: 2723734761563217238}
+  timeSliderPrfab: {fileID: 0}
   passedTime: 0
 --- !u!1 &8477848266067502833
 GameObject:
