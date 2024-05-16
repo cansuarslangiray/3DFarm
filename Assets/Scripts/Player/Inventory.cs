@@ -16,21 +16,24 @@ public class Inventory : MonoBehaviour
     }
 
     public GameObject[] prefabs;
-    private GameObject _container;
-    public int count = 0;
 
+    
     public Dictionary<VegetableType, List<GameObject>> vegetableInventory =
         new Dictionary<VegetableType, List<GameObject>>();
+
+    
+    public Dictionary<VegetableType, int> vegetableCounts = 
+        new Dictionary<VegetableType, int>();
 
     private void Awake()
     {
         foreach (VegetableType type in Enum.GetValues(typeof(VegetableType)))
         {
             vegetableInventory.Add(type, new List<GameObject>());
+            vegetableCounts.Add(type, 0); 
         }
-
-        _container = GameObject.Find("PlantContainer");
     }
+
     public void AddVegetable(GameObject plant)
     {
         if (plant == null)
@@ -43,33 +46,17 @@ public class Inventory : MonoBehaviour
         if (Enum.TryParse(plant.GetComponent<VegetableController>().type, out type) &&
             vegetableInventory.ContainsKey(type))
         {
-            for (int i = 0; i < prefabs.Length; i++)
-            {
-                if (prefabs[i].GetComponent<VegetableController>().type == plant.GetComponent<VegetableController>().type)
-                {
-                    GameObject tomato = Instantiate(prefabs[i]);
-                    GameObject tomato1 = Instantiate(prefabs[i]);
-                    tomato.transform.SetParent(_container.transform);
-                    tomato1.transform.SetParent(_container.transform);
-                    tomato1.SetActive(false);
-                    tomato.SetActive(false);
-                    vegetableInventory[type].Add(tomato);
-                    vegetableInventory[type].Add(tomato1); 
-                    break;
-                }
-            }
+            vegetableInventory[type].Add(plant);
+            vegetableCounts[type]++; 
+            vegetableCounts[type]++; 
 
-            count += 2; 
-            Debug.Log($"Added {plant.GetComponent<VegetableController>().type} (2x)");
+            Debug.Log($"Added {type} (1x). Total count for {type}: {vegetableCounts[type]}");
         }
         else
         {
-            Debug.LogError($"Invalid vegetable type: {plant.tag}");
+            Debug.LogError($"Invalid vegetable type: {plant.GetComponent<VegetableController>().type}");
         }
     }
-
-
-
 
     public bool UseVegetable(string typeString)
     {
@@ -77,6 +64,7 @@ public class Inventory : MonoBehaviour
         if (Enum.TryParse(typeString, true, out type) && vegetableInventory[type].Count > 0)
         {
             vegetableInventory[type].RemoveAt(0);
+            vegetableCounts[type]--; 
             return true;
         }
 
@@ -88,8 +76,19 @@ public class Inventory : MonoBehaviour
         if (vegetableInventory.ContainsKey(type) && vegetableInventory[type].Count > 0)
         {
             Debug.Log("HALOOO");
-            return vegetableInventory[type][0]; 
+            return vegetableInventory[type][0];
         }
         return null;
+    }
+
+    public int CountEachVeg(string type)
+    {
+        VegetableType typeVeg;
+        if (Enum.TryParse(type, true, out typeVeg))
+        {
+            return vegetableCounts[typeVeg]; 
+        }
+
+        return 0;
     }
 }

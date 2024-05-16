@@ -18,6 +18,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravityMultiplier = 3.0f;
     private float _velocity;
     private Inventory _inventory;
+    private String _tyepVeg;
+    private bool _canMove = true;
+    public GameObject optionsVeg;
+    public GameObject vegContanier;
 
     private void Awake()
     {
@@ -28,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
         _controls.Player.Move.performed += ctx => _moveInput = ctx.ReadValue<Vector2>();
         _controls.Player.Move.canceled += ctx => _moveInput = Vector2.zero;
         _controls.Player.Havrst.performed += ctx => Harvest();
+        _controls.Player.Plant.performed += ctx => ActivateOptions();
     }
 
     private void OnEnable()
@@ -42,12 +47,19 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (transform.position.y < 5)
+        {
+            Vector3 position = new Vector3(10, 9.2f, 22);
+            transform.position = position;
+        }
+
         Move();
     }
 
     public void Move()
     {
-      //  ApplyGravity();
+        if (!_canMove) return;
+
         _animator.SetBool("IsWalking", true);
         transform.Rotate(0, _moveInput.x * 30 * Time.deltaTime, 0);
 
@@ -55,35 +67,30 @@ public class PlayerMovement : MonoBehaviour
         {
             _characterController.SimpleMove(transform.forward * movementSpeed);
         }
-        else 
+        else
         {
             _animator.SetBool("IsWalking", false);
         }
     }
 
-    private void ApplyGravity()
-    {
-        if (!_characterController.isGrounded)
-        {
-            _velocity += _gravity * gravityMultiplier * Time.deltaTime;
-            _characterController.SimpleMove(Vector3.up * _velocity);
-        }
-    }
-
-
+ 
     public void Harvest()
     {
         Debug.Log("heyyy");
+        _canMove = false;
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
         foreach (var hitCollider in hitColliders)
         {
             if (hitCollider.gameObject.CompareTag("Vegetable"))
             {
-                _animator.SetBool("isPicked",true);
+                _animator.SetBool("isPicked", true);
+                Collider[] hitSoil = Physics.OverlapSphere(transform.position, 1.0f);
+                hitSoil[0].GetComponent<SoildManager>().isPlanted = false;
             }
         }
     }
 
+ 
     public void HarvestFinished()
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
@@ -100,16 +107,40 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-        _animator.SetBool("isPicked",false);
+
+        _animator.SetBool("isPicked", false);
+        _canMove = true;
+    }
+    public void ActivateOptions()
+    {
+        optionsVeg.SetActive(true);
+    }
+    
+    public void Plant()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
+        foreach (var hitCollider in hitColliders)
+        {
+
+            if (hitCollider.gameObject.CompareTag("Soil"))
+            {
+
+                SoildManager soilManager = hitCollider.gameObject.GetComponent<SoildManager>();
+                if (!soilManager.isPlanted)
+                {
+                    _animator.SetBool("isPlanted", true);
+                }
+            }
+        }
 
     }
 
-    private void Plant()
+    public void PlantFinshed()
     {
-        if (_inventory.count > 0)
+        Inventory.VegetableType typeVeg;
+        if (Enum.TryParse(name, true, out typeVeg))
         {
-            Debug.Log("1");
-            GameObject plantPrefab = _inventory.GetPlantPrefab(Inventory.VegetableType.Tomato);
+            GameObject plantPrefab = _inventory.GetPlantPrefab(typeVeg);
             if (plantPrefab != null)
             {
                 Debug.Log("2");
@@ -127,17 +158,24 @@ public class PlayerMovement : MonoBehaviour
                         if (!soilManager.isPlanted)
                         {
                             Debug.Log("5");
-
+                            _canMove = false;
                             GameObject plant = Instantiate(plantPrefab, hitCollider.transform.position,
                                 Quaternion.identity);
+                            plant.transform.SetParent(vegContanier.transform);
                             plant.SetActive(true);
                             soilManager.isPlanted = true;
-                            _inventory.UseVegetable("Tomato");
+                            _inventory.UseVegetable(name);
+                            _animator.SetBool("isPlanted", false);
                             break;
                         }
                     }
                 }
             }
         }
+    }
+
+    public void SetVeg(String type)
+    {
+        _tyepVeg = type;
     }
 }

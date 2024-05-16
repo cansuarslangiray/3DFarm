@@ -5,12 +5,6 @@ TagManager:
   serializedVersion: 2
   tags:
   - Soil
-  - Carrot
-  - Corn
-  - Pumpkin
-  - Tamato
-  - Turnip
-  - Eggplant
   - Vegetable
   layers:
   - Default
