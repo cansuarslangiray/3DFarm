@@ -1,7 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
+
 
 public class Inventory : MonoBehaviour
 {
@@ -17,20 +17,14 @@ public class Inventory : MonoBehaviour
 
     public GameObject[] prefabs;
 
-    
-    public Dictionary<VegetableType, List<GameObject>> vegetableInventory =
-        new Dictionary<VegetableType, List<GameObject>>();
-
-    
-    public Dictionary<VegetableType, int> vegetableCounts = 
+    public Dictionary<VegetableType, int> vegetableCounts =
         new Dictionary<VegetableType, int>();
 
     private void Awake()
     {
         foreach (VegetableType type in Enum.GetValues(typeof(VegetableType)))
         {
-            vegetableInventory.Add(type, new List<GameObject>());
-            vegetableCounts.Add(type, 0); 
+            vegetableCounts.Add(type, 0);
         }
     }
 
@@ -42,51 +36,73 @@ public class Inventory : MonoBehaviour
             return;
         }
 
-        VegetableType type;
-        if (Enum.TryParse(plant.GetComponent<VegetableController>().type, out type) &&
-            vegetableInventory.ContainsKey(type))
+        VegetableController controller = plant.GetComponent<VegetableController>();
+        if (controller == null)
         {
-            vegetableInventory[type].Add(plant);
-            vegetableCounts[type]++; 
-            vegetableCounts[type]++; 
+            Debug.LogError("Plant object does not have VegetableController component.");
+            return;
+        }
 
+        VegetableType type;
+        if (Enum.TryParse(controller.type, out type) && vegetableCounts.ContainsKey(type))
+        {
+            vegetableCounts[type]++;
             Debug.Log($"Added {type} (1x). Total count for {type}: {vegetableCounts[type]}");
         }
         else
         {
-            Debug.LogError($"Invalid vegetable type: {plant.GetComponent<VegetableController>().type}");
+            Debug.LogError($"Invalid vegetable type: {controller.type}");
         }
-    }
-
-    public bool UseVegetable(string typeString)
-    {
-        VegetableType type;
-        if (Enum.TryParse(typeString, true, out type) && vegetableInventory[type].Count > 0)
-        {
-            vegetableInventory[type].RemoveAt(0);
-            vegetableCounts[type]--; 
-            return true;
-        }
-
-        return false;
     }
 
     public GameObject GetPlantPrefab(VegetableType type)
     {
-        if (vegetableInventory.ContainsKey(type) && vegetableInventory[type].Count > 0)
+        foreach (GameObject prefab in prefabs)
         {
-            Debug.Log("HALOOO");
-            return vegetableInventory[type][0];
+            VegetableController controller = prefab.GetComponent<VegetableController>();
+            if (controller != null && Enum.TryParse(controller.type, out VegetableType prefabType) &&
+                prefabType == type)
+            {
+                return prefab;
+            }
         }
+
         return null;
+    }
+
+    public bool UseVegetable(string type)
+    {
+        if (Enum.TryParse(type, true, out VegetableType vegetableType))
+        {
+            if (vegetableCounts.ContainsKey(vegetableType) && vegetableCounts[vegetableType] > 0)
+            {
+                vegetableCounts[vegetableType]--;
+                GameObject plantPrefab = GetPlantPrefab(vegetableType);
+                if (plantPrefab != null)
+                {
+                    Instantiate(plantPrefab);
+                }
+                else
+                {
+                    Debug.LogError($"Prefab for {vegetableType} not found.");
+                }
+
+                return true;
+            }
+        }
+
+
+        return false;
     }
 
     public int CountEachVeg(string type)
     {
-        VegetableType typeVeg;
-        if (Enum.TryParse(type, true, out typeVeg))
+        if (Enum.TryParse(type, true, out VegetableType vegetableType))
         {
-            return vegetableCounts[typeVeg]; 
+            if (vegetableCounts.ContainsKey(vegetableType))
+            {
+                return vegetableCounts[vegetableType];
+            }
         }
 
         return 0;

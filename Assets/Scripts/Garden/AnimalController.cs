@@ -15,13 +15,11 @@ public class AnimalController : MonoBehaviour
 {
     public NavMeshAgent navMeshAgent;
 
-    [Header("Stroll")] 
-    public float strollSpeed = 3f;
+    [Header("Stroll")] public float strollSpeed = 3f;
     public float strollTime = 5.0f;
     public float strollDist = 1f;
 
-    [Header("Idle")] 
-    public float idleSpeed = 0f;
+    [Header("Idle")] public float idleSpeed = 0f;
     public float idleTime = 3.0f;
 
     public AnimalState currState = AnimalState.Idle; //at beginning -> idle
@@ -31,20 +29,26 @@ public class AnimalController : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.speed = idleSpeed;
         currState = AnimalState.Idle;
-        
+
         ChangeState();
     }
 
     private void Update()
     {
+        if (gameObject.GetComponent<Animal>().isReady)
+        {
+            navMeshAgent.isStopped = true;
+        }
+
         float speed = currState == AnimalState.Idle ? idleSpeed : strollSpeed;
         navMeshAgent.speed = speed;
     }
+
     public void ChangeState()
     {
         switch (currState)
         {
-            case AnimalState.Idle :
+            case AnimalState.Idle:
                 HandleIdleState();
                 break;
             case AnimalState.Strolling:
@@ -59,7 +63,7 @@ public class AnimalController : MonoBehaviour
         randomDirection += origin;
         NavMeshHit navMeshHit;
 
-        if (NavMesh.SamplePosition(randomDirection, out navMeshHit,distance, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(randomDirection, out navMeshHit, distance, NavMesh.AllAreas))
         {
             return navMeshHit.position;
         }
@@ -67,9 +71,8 @@ public class AnimalController : MonoBehaviour
         {
             return RandomPosition(origin, distance);
         }
-        
     }
-    
+
     private void HandleIdleState()
     {
         StartCoroutine(WaitToMove());
@@ -77,7 +80,7 @@ public class AnimalController : MonoBehaviour
 
     private IEnumerator WaitToMove()
     {
-        float waitTime = Random.Range(idleTime / 2 , idleTime * 2);
+        float waitTime = Random.Range(idleTime / 2, idleTime * 2);
         yield return new WaitForSeconds(waitTime);
 
         Vector3 randomDestination = RandomPosition(transform.position, strollDist);
@@ -86,7 +89,7 @@ public class AnimalController : MonoBehaviour
         //Debug.Log("corrrect?" + randomDestination);
         SetState(AnimalState.Strolling);
     }
-    
+
     private void HandleStrollingState()
     {
         StartCoroutine(WaitToReachDestination());
@@ -104,10 +107,10 @@ public class AnimalController : MonoBehaviour
                 SetState(AnimalState.Idle);
                 yield break;
             }
-            
+
             yield return null;
         }
-        
+
         SetState(AnimalState.Idle);
         //
     }
@@ -127,5 +130,4 @@ public class AnimalController : MonoBehaviour
     {
         ChangeState();
     }
-
 }

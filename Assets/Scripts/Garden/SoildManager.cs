@@ -5,4 +5,6 @@ using UnityEngine;
 public class SoildManager : MonoBehaviour
 {
    public bool isPlanted;
+
+  
 }

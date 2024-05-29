@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using TMPro;
+using UnityEngine.Serialization;
 
 public class InvGui : MonoBehaviour
 {
     private TMP_Text _timeText;
-    public string name;
     private GameObject _player;
-
+    
     private void Start()
     {
         _player = GameObject.Find("Player");
@@ -21,5 +19,6 @@ public class InvGui : MonoBehaviour
         var count = _player.GetComponent<Inventory>().CountEachVeg(name) - 1;
         _timeText.text = "x" + count;
         _player.GetComponent<PlayerMovement>().Plant();
+         gameObject.transform.parent.gameObject.SetActive(false);
     }
 }

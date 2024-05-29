@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     private bool _canMove = true;
     public GameObject optionsVeg;
     public GameObject vegContanier;
+    private float _money=10000;
 
     private void Awake()
     {
@@ -73,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
- 
+
     public void Harvest()
     {
         Debug.Log("heyyy");
@@ -85,12 +86,18 @@ public class PlayerMovement : MonoBehaviour
             {
                 _animator.SetBool("isPicked", true);
                 Collider[] hitSoil = Physics.OverlapSphere(transform.position, 1.0f);
-                hitSoil[0].GetComponent<SoildManager>().isPlanted = false;
+                foreach (var soil in hitSoil)
+                {
+                    if (soil.gameObject.CompareTag("Soil"))
+                    {
+                        soil.GetComponent<SoildManager>().isPlanted = false;
+                    }
+                }
             }
         }
     }
 
- 
+
     public void HarvestFinished()
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
@@ -111,20 +118,21 @@ public class PlayerMovement : MonoBehaviour
         _animator.SetBool("isPicked", false);
         _canMove = true;
     }
+
     public void ActivateOptions()
     {
         optionsVeg.SetActive(true);
     }
-    
+
     public void Plant()
     {
+        _canMove = false;
+        Debug.Log("1");
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
         foreach (var hitCollider in hitColliders)
         {
-
             if (hitCollider.gameObject.CompareTag("Soil"))
             {
-
                 SoildManager soilManager = hitCollider.gameObject.GetComponent<SoildManager>();
                 if (!soilManager.isPlanted)
                 {
@@ -132,13 +140,13 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-
     }
 
     public void PlantFinshed()
     {
+        Debug.Log("1223");
         Inventory.VegetableType typeVeg;
-        if (Enum.TryParse(name, true, out typeVeg))
+        if (Enum.TryParse(_tyepVeg, true, out typeVeg))
         {
             GameObject plantPrefab = _inventory.GetPlantPrefab(typeVeg);
             if (plantPrefab != null)
@@ -158,24 +166,37 @@ public class PlayerMovement : MonoBehaviour
                         if (!soilManager.isPlanted)
                         {
                             Debug.Log("5");
-                            _canMove = false;
                             GameObject plant = Instantiate(plantPrefab, hitCollider.transform.position,
                                 Quaternion.identity);
                             plant.transform.SetParent(vegContanier.transform);
                             plant.SetActive(true);
                             soilManager.isPlanted = true;
-                            _inventory.UseVegetable(name);
+                            _inventory.UseVegetable(_tyepVeg);
                             _animator.SetBool("isPlanted", false);
+                            _canMove = true;
                             break;
                         }
                     }
                 }
             }
         }
+
+        _canMove = true;
+        _animator.SetBool("isPlanted", false);
     }
 
     public void SetVeg(String type)
     {
         _tyepVeg = type;
+    }
+
+    public float GetMoney()
+    {
+        return _money;
+    }
+
+    public void SetMoney(float money)
+    {
+        _money = money;
     }
 }

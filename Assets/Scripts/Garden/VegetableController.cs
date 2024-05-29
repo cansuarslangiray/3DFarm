@@ -13,6 +13,8 @@ public class VegetableController : MonoBehaviour
     public bool isRipe = false;
     public float growthTime;
     public bool isSeeded = false;
+    private GameObject _soil;
+    private bool _isEmpty;
 
     void Start()
     {
@@ -51,5 +53,10 @@ public class VegetableController : MonoBehaviour
         {
             transform.GetComponent<TimeBarPlant>().GetSlider().SetActive(false);
         }
+    }
+
+    public void SetSoil(GameObject o)
+    {
+        _soil = o;
     }
 }
