@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: Carrot
   isRipe: 0
-  growthTime: 2
+  growthTime: 15
   isSeeded: 1
 --- !u!114 &1281718541073759457
 MonoBehaviour:

@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: Pumpkin
   isRipe: 0
-  growthTime: 420
+  growthTime: 42
   isSeeded: 1
 --- !u!114 &283208130468772359
 MonoBehaviour:

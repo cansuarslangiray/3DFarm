@@ -32,14 +32,12 @@ public class Inventory : MonoBehaviour
     {
         if (plant == null)
         {
-            Debug.LogError("Invalid plant object.");
             return;
         }
 
         VegetableController controller = plant.GetComponent<VegetableController>();
         if (controller == null)
         {
-            Debug.LogError("Plant object does not have VegetableController component.");
             return;
         }
 
@@ -47,12 +45,9 @@ public class Inventory : MonoBehaviour
         if (Enum.TryParse(controller.type, out type) && vegetableCounts.ContainsKey(type))
         {
             vegetableCounts[type]++;
-            Debug.Log($"Added {type} (1x). Total count for {type}: {vegetableCounts[type]}");
+            
         }
-        else
-        {
-            Debug.LogError($"Invalid vegetable type: {controller.type}");
-        }
+       
     }
 
     public GameObject GetPlantPrefab(VegetableType type)
@@ -81,10 +76,6 @@ public class Inventory : MonoBehaviour
                 if (plantPrefab != null)
                 {
                     Instantiate(plantPrefab);
-                }
-                else
-                {
-                    Debug.LogError($"Prefab for {vegetableType} not found.");
                 }
 
                 return true;

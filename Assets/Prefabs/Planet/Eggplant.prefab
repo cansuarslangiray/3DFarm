@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: Eggplant
   isRipe: 0
-  growthTime: 4
+  growthTime: 8
   isSeeded: 1
 --- !u!114 &4738617194692775004
 MonoBehaviour:
