@@ -4,10 +4,22 @@ using UnityEngine;
 
 public class Teleport : MonoBehaviour
 {
-    public Transform teleportTarget; 
-    
-    public void Teleportation()
+    public Transform teleportTarget1;
+    public Transform teleportTarget2;
+
+    public void TeleportTo(int targetNum)
     {
-        transform.position = teleportTarget.position;
+        switch (targetNum)
+        {
+            case 1:
+                transform.position = teleportTarget1.position;
+                break;
+            case 2:
+                transform.position = teleportTarget2.position;
+                break;
+            default:
+                Debug.LogWarning("Invalid target number");
+                break;
+        }
     }
 }

@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class SpawnCircle : MonoBehaviour
 {
-    public GameObject player; 
-    
-    public GameObject canvas; 
+    public GameObject player;
+    public GameObject canvas;
+    public int targetNum;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            canvas.SetActive(true); 
+            canvas.SetActive(true);
         }
     }
 
@@ -21,18 +21,18 @@ public class SpawnCircle : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            canvas.SetActive(false); 
+            canvas.SetActive(false);
         }
     }
 
     public void YesButton()
     {
-        player.GetComponent<Teleport>().Teleportation();
-        canvas.SetActive(false); 
+        player.GetComponent<Teleport>().TeleportTo(targetNum);
+        canvas.SetActive(false);
     }
 
     public void NoButton()
     {
-        canvas.SetActive(false); 
+        canvas.SetActive(false);
     }
 }
