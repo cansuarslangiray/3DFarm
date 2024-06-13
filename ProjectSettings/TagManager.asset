@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Soil
   - Vegetable
+  - Villager
   layers:
   - Default
   - TransparentFX

@@ -24,7 +24,7 @@ public class Inventory : MonoBehaviour
     {
         foreach (VegetableType type in Enum.GetValues(typeof(VegetableType)))
         {
-            vegetableCounts.Add(type, 0);
+            vegetableCounts.Add(type, 100);
         }
     }
 
@@ -97,5 +97,32 @@ public class Inventory : MonoBehaviour
         }
 
         return 0;
+    }
+    public bool CanFulfillRequest(Dictionary<VegetableType, int> requests)
+    {
+        foreach (var request in requests)
+        {
+            if (!vegetableCounts.ContainsKey(request.Key) || vegetableCounts[request.Key] < request.Value)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void FulfillRequest(Dictionary<VegetableType, int> requests)
+    {
+        if (CanFulfillRequest(requests))
+        {
+            foreach (var request in requests)
+            {
+                vegetableCounts[request.Key] -= request.Value;
+            }
+            Debug.Log("Request fulfilled!");
+        }
+        else
+        {
+            Debug.Log("Cannot fulfill the request.");
+        }
     }
 }

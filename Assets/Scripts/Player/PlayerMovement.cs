@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject optionsVeg;
     public GameObject vegContanier;
     private float _money=10000;
+    private bool _isUsed=false;
 
     private void Awake()
     {
@@ -78,12 +79,12 @@ public class PlayerMovement : MonoBehaviour
     public void Harvest()
     {
         Debug.Log("heyyy");
-        _canMove = false;
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
         foreach (var hitCollider in hitColliders)
         {
             if (hitCollider.gameObject.CompareTag("Vegetable"))
             {
+                _isUsed = true;
                 _animator.SetBool("isPicked", true);
                 Collider[] hitSoil = Physics.OverlapSphere(transform.position, 1.0f);
                 foreach (var soil in hitSoil)
@@ -95,6 +96,19 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+
+        if (_isUsed)
+        {
+            _canMove = false;
+            _isUsed = false;
+        }
+        else
+        {
+            _canMove = true;
+            _isUsed = true;
+        }
+      
+
     }
 
 
@@ -126,19 +140,30 @@ public class PlayerMovement : MonoBehaviour
 
     public void Plant()
     {
-        _canMove = false;
+      
         Debug.Log("1");
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
         foreach (var hitCollider in hitColliders)
         {
             if (hitCollider.gameObject.CompareTag("Soil"))
             {
+                _isUsed = true;
                 SoildManager soilManager = hitCollider.gameObject.GetComponent<SoildManager>();
                 if (!soilManager.isPlanted)
                 {
                     _animator.SetBool("isPlanted", true);
                 }
             }
+        }
+        if (_isUsed)
+        {
+            _canMove = false;
+            _isUsed = false;
+        }
+        else
+        {
+            _canMove = true;
+            _isUsed = true;
         }
     }
 
