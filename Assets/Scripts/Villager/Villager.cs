@@ -10,9 +10,11 @@ public class Villager : MonoBehaviour
     private bool isPlayerNearby = false;
     private GameObject _player;
     public float interactionDistance = 2.5f;
+    private Animator _anim;
 
     void Start()
     {
+        _anim = GetComponent<Animator>();
         _player = GameObject.FindWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
@@ -56,6 +58,7 @@ public class Villager : MonoBehaviour
         {
             agent.isStopped = true;
             isPlayerNearby = true;
+            _anim.SetBool("isStop", true);
         }
     }
 
@@ -65,6 +68,8 @@ public class Villager : MonoBehaviour
         {
             agent.isStopped = false;
             isPlayerNearby = false;
+            _anim.SetBool("isStop", false);
+
             MoveToRandomPosition();
         }
     }

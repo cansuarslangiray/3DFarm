@@ -24,7 +24,7 @@ public class Inventory : MonoBehaviour
     {
         foreach (VegetableType type in Enum.GetValues(typeof(VegetableType)))
         {
-            vegetableCounts.Add(type, 100);
+            vegetableCounts.Add(type, 12);
         }
     }
 
