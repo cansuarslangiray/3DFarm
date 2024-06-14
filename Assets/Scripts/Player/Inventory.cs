@@ -20,12 +20,17 @@ public class Inventory : MonoBehaviour
     public Dictionary<VegetableType, int> vegetableCounts =
         new Dictionary<VegetableType, int>();
 
+    private int _numMilk;
+
+
     private void Awake()
     {
         foreach (VegetableType type in Enum.GetValues(typeof(VegetableType)))
         {
             vegetableCounts.Add(type, 12);
         }
+
+        _numMilk = 0;
     }
 
     public void AddVegetable(GameObject plant)
@@ -45,9 +50,7 @@ public class Inventory : MonoBehaviour
         if (Enum.TryParse(controller.type, out type) && vegetableCounts.ContainsKey(type))
         {
             vegetableCounts[type]++;
-            
         }
-       
     }
 
     public GameObject GetPlantPrefab(VegetableType type)
@@ -98,6 +101,7 @@ public class Inventory : MonoBehaviour
 
         return 0;
     }
+
     public bool CanFulfillRequest(Dictionary<VegetableType, int> requests)
     {
         foreach (var request in requests)
@@ -118,11 +122,16 @@ public class Inventory : MonoBehaviour
             {
                 vegetableCounts[request.Key] -= request.Value;
             }
-            Debug.Log("Request fulfilled!");
         }
-        else
-        {
-            Debug.Log("Cannot fulfill the request.");
-        }
+    }
+
+    public void IncreaseMilk()
+    {
+        _numMilk += 2;
+    }
+
+    public int GetMilk()
+    {
+        return _numMilk;
     }
 }

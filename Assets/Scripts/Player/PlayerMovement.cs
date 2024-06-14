@@ -22,8 +22,9 @@ public class PlayerMovement : MonoBehaviour
     private bool _canMove = true;
     public GameObject optionsVeg;
     public GameObject vegContanier;
-    public float _money=10000;
-    private bool _isUsed=false;
+    public float _money = 10000;
+    private bool _isUsed = false;
+
 
     private void Awake()
     {
@@ -35,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
         _controls.Player.Move.canceled += ctx => _moveInput = Vector2.zero;
         _controls.Player.Havrst.performed += ctx => Harvest();
         _controls.Player.Plant.performed += ctx => ActivateOptions();
+        _controls.Player.CollectMilk.performed += ctx => CollectionMilk();
     }
 
     private void OnEnable()
@@ -56,6 +58,23 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Move();
+        
+    }
+
+    public void CollectionMilk()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2.0f);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.gameObject.CompareTag("Cow"))
+            {
+                Animal animal = hitCollider.gameObject.GetComponent<Animal>();
+                if (animal.isReady)
+                {
+                    animal.Collection();
+                }
+            }
+        }
     }
 
     public void Move()
@@ -107,8 +126,6 @@ public class PlayerMovement : MonoBehaviour
             _canMove = true;
             _isUsed = true;
         }
-      
-
     }
 
 
@@ -140,7 +157,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void Plant()
     {
-      
         Debug.Log("1");
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
         foreach (var hitCollider in hitColliders)
@@ -155,6 +171,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+
         if (_isUsed)
         {
             _canMove = false;
