@@ -97,7 +97,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void Harvest()
     {
-        Debug.Log("heyyy");
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
         foreach (var hitCollider in hitColliders)
         {
@@ -157,7 +156,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void Plant()
     {
-        Debug.Log("1");
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
         foreach (var hitCollider in hitColliders)
         {
@@ -186,28 +184,23 @@ public class PlayerMovement : MonoBehaviour
 
     public void PlantFinshed()
     {
-        Debug.Log("1223");
         Inventory.VegetableType typeVeg;
         if (Enum.TryParse(_tyepVeg, true, out typeVeg))
         {
             GameObject plantPrefab = _inventory.GetPlantPrefab(typeVeg);
             if (plantPrefab != null)
             {
-                Debug.Log("2");
 
                 Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f);
                 foreach (var hitCollider in hitColliders)
                 {
-                    Debug.Log("3");
 
                     if (hitCollider.gameObject.CompareTag("Soil"))
                     {
-                        Debug.Log("4");
 
                         SoildManager soilManager = hitCollider.gameObject.GetComponent<SoildManager>();
                         if (!soilManager.isPlanted)
                         {
-                            Debug.Log("5");
                             GameObject plant = Instantiate(plantPrefab, hitCollider.transform.position,
                                 Quaternion.identity);
                             plant.transform.SetParent(vegContanier.transform);

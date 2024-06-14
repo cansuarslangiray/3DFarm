@@ -18,7 +18,7 @@ public class Teleport : MonoBehaviour
                 transform.position = teleportTarget2.position;
                 break;
             default:
-                Debug.LogWarning("Invalid target number");
+                Debug.LogWarning("!!!!");
                 break;
         }
     }

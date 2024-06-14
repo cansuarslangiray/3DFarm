@@ -40,16 +40,12 @@ public class PlayerInteraction : MonoBehaviour
         if (playerInventory.CanFulfillRequest(villagerRequest.currentRequests))
         {
             playerInventory.FulfillRequest(villagerRequest.currentRequests);
-            Debug.Log("Request fulfilled and rewarded!");
             Destroy(currentVillager);
             _villagers = GameObject.FindGameObjectsWithTag("Villager");
             currentVillager = null;
             interactionUI.SetActive(false);
         }
-        else
-        {
-            Debug.Log("Player cannot fulfill the request.");
-        }
+       
     }
 
     void OnTriggerEnter(Collider other)

@@ -22,7 +22,7 @@ public class AnimalController : MonoBehaviour
     [Header("Idle")] public float idleSpeed = 0f;
     public float idleTime = 3.0f;
 
-    public AnimalState currState = AnimalState.Idle; //at beginning -> idle
+    public AnimalState currState = AnimalState.Idle; 
 
     private void Start()
     {
@@ -86,7 +86,7 @@ public class AnimalController : MonoBehaviour
         Vector3 randomDestination = RandomPosition(transform.position, strollDist);
 
         navMeshAgent.SetDestination(randomDestination);
-        //Debug.Log("corrrect?" + randomDestination);
+      
         SetState(AnimalState.Strolling);
     }
 
@@ -112,7 +112,7 @@ public class AnimalController : MonoBehaviour
         }
 
         SetState(AnimalState.Idle);
-        //
+        
     }
 
     public void SetState(AnimalState newState)

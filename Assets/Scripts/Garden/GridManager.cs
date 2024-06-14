@@ -48,6 +48,6 @@ public class GridManager : MonoBehaviour
 
     void PlaceObject(Vector3 position)
     {
-        Instantiate(gridCellPrefab, position, Quaternion.identity); // Nesne yerleştirme
+        Instantiate(gridCellPrefab, position, Quaternion.identity); 
     }
 }

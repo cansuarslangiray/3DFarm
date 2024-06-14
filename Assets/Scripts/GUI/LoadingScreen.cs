@@ -10,14 +10,14 @@ public class LoadingScreen : MonoBehaviour
 
     public GameObject canvas;
     public GameObject helpCanvas;
-    
+
     private void Start()
     {
         if (loaderUI == null || loadBar == null)
         {
-            Debug.LogError("UI elements are not assigned.");
+            Debug.LogError("not assign");
         }
-        
+
         helpCanvas.SetActive(false);
     }
 
@@ -34,29 +34,26 @@ public class LoadingScreen : MonoBehaviour
         asyncOperation.allowSceneActivation = false;
 
         float elapsedTime = 0f;
-        float totalLoadingTime = 2f; 
+        float totalLoadingTime = 2f;
 
         while (elapsedTime < totalLoadingTime)
         {
             float progress = Mathf.Clamp01(elapsedTime / totalLoadingTime);
             loadBar.value = progress;
-
-            //Debug.Log("Loading progress: " + progress);
-
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        
+
         loadBar.value = 1;
         Debug.Log("Loading complete");
         asyncOperation.allowSceneActivation = true;
-        
+
         yield return new WaitForSeconds(0.5f);
-        
+
         loaderUI.SetActive(false);
     }
 
-   public void HelpButton()
+    public void HelpButton()
     {
         helpCanvas.SetActive(true);
         canvas.SetActive(false);
@@ -66,6 +63,5 @@ public class LoadingScreen : MonoBehaviour
     {
         helpCanvas.SetActive(false);
         canvas.SetActive(true);
-    } 
-    
+    }
 }
