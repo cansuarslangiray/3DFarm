@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     private bool _canMove = true;
     public GameObject optionsVeg;
     public GameObject vegContanier;
-    private float _money=10000;
+    public float _money=10000;
     private bool _isUsed=false;
 
     private void Awake()

@@ -3,7 +3,15 @@ using UnityEngine;
 public class DragAndDrop : MonoBehaviour
 {
     private bool _isDragging = false;
-    private Vector3 _offset;
+    public Vector3 _offset;
+    public float groundLevelY = 8.5f; 
+
+    private void Start()
+    {
+        Vector3 initialPosition = transform.position;
+        initialPosition.y = groundLevelY;
+        transform.position = initialPosition;
+    }
 
     private void OnMouseDown()
     {
@@ -15,7 +23,9 @@ public class DragAndDrop : MonoBehaviour
     {
         if (_isDragging)
         {
-            transform.position = GetMouseWorldPos() + _offset;
+            Vector3 newPosition = GetMouseWorldPos() + _offset;
+            newPosition.y = groundLevelY; 
+            transform.position = newPosition;
         }
     }
 
