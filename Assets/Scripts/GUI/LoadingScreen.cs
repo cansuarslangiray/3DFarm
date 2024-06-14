@@ -8,8 +8,9 @@ public class LoadingScreen : MonoBehaviour
     public GameObject loaderUI;
     public Slider loadBar;
 
-    //public GameObject canvas;
-    //public GameObject helpCanvas;
+    public GameObject canvas;
+    public GameObject helpCanvas;
+    
     private void Start()
     {
         if (loaderUI == null || loadBar == null)
@@ -17,7 +18,7 @@ public class LoadingScreen : MonoBehaviour
             Debug.LogError("UI elements are not assigned.");
         }
         
-        //helpCanvas.SetActive(false);
+        helpCanvas.SetActive(false);
     }
 
     public void LoadScene(int index)
@@ -55,7 +56,7 @@ public class LoadingScreen : MonoBehaviour
         loaderUI.SetActive(false);
     }
 
-   /* public void HelpButton()
+   public void HelpButton()
     {
         helpCanvas.SetActive(true);
         canvas.SetActive(false);
@@ -65,5 +66,6 @@ public class LoadingScreen : MonoBehaviour
     {
         helpCanvas.SetActive(false);
         canvas.SetActive(true);
-    } */
+    } 
+    
 }
